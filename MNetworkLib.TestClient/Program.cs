@@ -13,9 +13,10 @@ namespace MNetworkLib.TestClient {
 
         static void Main(string[] args) {
 
-            Logger.AddDefaultConsoleLogging();
-
+            //for(int e = 0; e < 300; e++)
             new Thread(() => {
+
+                Random rand = new Random();
 
                 try {
 
@@ -24,17 +25,38 @@ namespace MNetworkLib.TestClient {
 
                     client.OnHandshake += () => {
 
-                        
+                        using (IOStream stream = new IOStream()) {
+
+                            float numb = (float)rand.NextDouble() * 999;
+                            Console.WriteLine("Client sending number: " + numb);
+
+                            stream.WriteFloat(numb);
+
+                            client.Send(new TCPMessage() {
+                                Content = stream.ToArray()
+                            });
+
+                        }
 
                     };
 
                     client.OnMessage += (mes) => {
 
-                        Console.WriteLine("New Message");
+                        using (IOStream stream = new IOStream(mes.Content)) {
+
+                            float fl;
+                            stream.ReadFloat(out fl);
+
+                            Console.WriteLine("Received from Server: " + fl);
+
+                        }
 
                         using (IOStream stream = new IOStream()) {
 
-                            stream.WriteFloat(20.4f);
+                            float numb = (float)rand.NextDouble() * 999;
+                            Console.WriteLine("Client sending number: " + numb);
+
+                            stream.WriteFloat(numb);
 
                             client.Send(new TCPMessage() {
                                 Content = stream.ToArray()

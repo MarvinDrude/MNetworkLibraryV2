@@ -15,9 +15,11 @@ namespace MNetworkLib.Test {
 
         static void Main(string[] args) {
 
-            Logger.AddDefaultConsoleLogging();
+            //Logger.AddDefaultConsoleLogging();
 
             new Thread(() => {
+
+                Random rand = new Random();
 
                 TCPServer server = new TCPServer(27789, null, IPAddress.Any);
                 server.Start();
@@ -29,7 +31,20 @@ namespace MNetworkLib.Test {
                         float fl;
                         stream.ReadFloat(out fl);
 
-                        Console.WriteLine(fl);
+                        Console.WriteLine("Received from Client: " + fl);
+
+                    }
+
+                    using (IOStream stream = new IOStream()) {
+
+                        float numb = (float)rand.NextDouble() * 999;
+                        Console.WriteLine("Server sending number: " + numb);
+
+                        stream.WriteFloat(numb);
+
+                        cl.Send(new TCPMessage() {
+                            Content = stream.ToArray()
+                        });
 
                     }
 

@@ -127,7 +127,7 @@ namespace MNetworkLib.TCP {
         /// <summary>
         /// No Handshake Event, called if client fails to provide correct init package
         /// </summary>
-        public NoHandshakeEventHandler OnNoHandshake;
+        public event NoHandshakeEventHandler OnNoHandshake;
 
         /// <summary>
         /// Timeout Event Handler
@@ -138,7 +138,7 @@ namespace MNetworkLib.TCP {
         /// <summary>
         /// Timeout Event, called if client is timed out
         /// </summary>
-        public TimeoutEventHandler OnTimeout;
+        public event TimeoutEventHandler OnTimeout;
 
         /// <summary>
         /// Kick Event Handler
@@ -149,7 +149,18 @@ namespace MNetworkLib.TCP {
         /// <summary>
         /// Kick Event, called if client was kicked
         /// </summary>
-        public KickEventHandler OnKick;
+        public event KickEventHandler OnKick;
+
+        /// <summary>
+        /// Handshake Event Handler
+        /// </summary>
+        /// <param name="client"></param>
+        public delegate void HandshakeHandler(TCPServerClient client);
+
+        /// <summary>
+        /// Handshake Event
+        /// </summary>
+        public event HandshakeHandler OnHandshake;
 
         /// <summary>
         /// Default constructor, default uses ipv4 address
@@ -543,6 +554,8 @@ namespace MNetworkLib.TCP {
                         Code = TCPMessageCode.Init,
                         Content = new byte[] { 0, 1, 0 }
                     });
+
+                    OnHandshake?.Invoke(client);
 
                 }
 
