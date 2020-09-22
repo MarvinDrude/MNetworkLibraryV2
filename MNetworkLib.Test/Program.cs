@@ -21,7 +21,7 @@ namespace MNetworkLib.Test {
 
                 Random rand = new Random();
 
-                TCPServer server = new TCPServer(27789, null, IPAddress.Any);
+                TCPServer server = new TCPServer(54545, null, IPAddress.Any);
                 server.Start();
 
                 server.OnMessage += (cl, mess) => {

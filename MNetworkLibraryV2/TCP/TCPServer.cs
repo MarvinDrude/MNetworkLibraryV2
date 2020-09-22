@@ -538,7 +538,7 @@ namespace MNetworkLib.TCP {
 
                     TCPMessage message = client.Reader.Read(client);
 
-                    if (message.Code != TCPMessageCode.Init
+                    if (message == null || message.Code != TCPMessageCode.Init
                         || message.Content.Length > 10) {
                         RemoveClient(client, TCPDisconnectType.NoHandshake);
                         return;
@@ -601,7 +601,7 @@ namespace MNetworkLib.TCP {
                 string strDate = Encoding.UTF8.GetString(message.Content);
                 DateTime time = DateTime.Parse(strDate, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
-                message.Client.RTT = (DateTime.UtcNow.Ticks - time.Ticks) / 10000;
+                message.Client.RTT = ((DateTime.UtcNow.Ticks - time.Ticks) / 10000);
 
             } catch(Exception er) {
 
